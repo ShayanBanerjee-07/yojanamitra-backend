@@ -52,7 +52,7 @@ async def search_schemes(user_input: UserInput):
             try:
                 client = OpenAI(api_key=key, base_url="https://api.groq.com/openai/v1")
                 response = client.chat.completions.create(
-                    model="llama3-8b-8192", # Groq's fast LLaMA model
+                    model="llama-3.1-8b-instant", # Naya upgraded model
                     messages=[
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_input.text}
