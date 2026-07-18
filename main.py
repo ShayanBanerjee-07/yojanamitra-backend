@@ -13,6 +13,10 @@ load_dotenv()
 
 app = FastAPI()
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to YojanaMitra AI Backend! The API is running successfully."}
+
 # Frontend se connect karne ke liye CORS settings
 app.add_middleware(
     CORSMiddleware,
@@ -24,13 +28,13 @@ app.add_middleware(
 # Initialize Supabase
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
-# Dono Groq keys ko ek list mein daalna
+# 2 Groq keys in one list
 groq_keys = [os.getenv("GROQ_API_KEY_1"), os.getenv("GROQ_API_KEY_2")]
 
 class UserInput(BaseModel):
     text: str
 
-# ----------------- ROUTE 1: Search Schemes (LLaMA 3) -----------------
+# ----------------- ROUTE 1: Search Schemes (LLaMA 3.) -----------------
 @app.post("/api/search-schemes")
 async def search_schemes(user_input: UserInput):
     try:
@@ -48,11 +52,11 @@ async def search_schemes(user_input: UserInput):
         
         # API Key Rotation Logic
         for key in groq_keys:
-            if not key: continue # Agar key empty ho toh skip kare
+            if not key: continue # skip if key is None or empty
             try:
                 client = OpenAI(api_key=key, base_url="https://api.groq.com/openai/v1")
                 response = client.chat.completions.create(
-                    model="llama-3.1-8b-instant", # Naya upgraded model
+                    model="llama-3.1-8b-instant", # new upgraded model
                     messages=[
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_input.text}
@@ -60,14 +64,14 @@ async def search_schemes(user_input: UserInput):
                     temperature=0
                 )
                 ai_response_text = response.choices[0].message.content.strip()
-                break # Agar output mil gaya, toh loop se bahar aa jao
+                break # if one key works, break the loop and don't try the next key
             
             except Exception as e:
                 if "429" in str(e) or "insufficient_quota" in str(e):
                     print("Rate limit reached for current key, switching to next key...")
-                    continue # Agar limit cross hui, toh loop continue karke next key par jayega
+                    continue # If limit is exceeded, continue to the next key
                 else:
-                    raise e # Koi internet ya syntax error ho toh theek se throw karega
+                    raise e # If any other error occurs, raise it normally
         
         if not ai_response_text:
             raise Exception("Donon API keys ki limit exhaust ho chuki hai!")
@@ -127,7 +131,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
                 else:
                     raise e
         
-        os.remove(temp_file_path) # Storage bachane ke liye file delete karna
+        os.remove(temp_file_path) # delete the temp file after processing
         
         if not transcribed_text:
             raise Exception("Donon API keys ki limit exhaust ho chuki hai!")
@@ -135,7 +139,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
         return {"transcribed_text": transcribed_text}
         
     except Exception as e:
-        # Error aane par bhi kachra file clear kar deni chahiye
+        # cleanup temp file in case of error
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
         raise HTTPException(status_code=500, detail=str(e))
