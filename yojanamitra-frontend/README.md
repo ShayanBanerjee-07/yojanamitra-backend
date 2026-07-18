@@ -1,70 +1,27 @@
-# Getting Started with Create React App
+# 🇮🇳 YojanaMitra AI - NxtWave Hackathon Submission
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Live Demo:** [https://yojanamitra-frontend.vercel.app]
+**Backend API:** [https://yojanamitra-backend-xvwl.onrender.com]
 
-## Available Scripts
+## 🎯 The Problem
+Millions of eligible citizens in rural India miss out on government schemes because of complex eligibility criteria and difficult-to-navigate government portals. The barrier is language and digital literacy, not the lack of schemes.
 
-In the project directory, you can run:
+## 💡 The Solution
+**YojanaMitra AI** is a Voice/Text AI assistant built for rural India. Users simply describe their situation in natural language (e.g., *"I am a 45-year-old farmer from Chhattisgarh with a 2 Lakh income"*). 
+The AI engine processes this unstructured data, extracts key demographic variables, and maps them to a structured database to fetch the exact schemes they are eligible for instantly.
 
-### `npm start`
+## ⚙️ Technical Architecture
+* **Frontend:** React.js, modern UI with responsive design (Deployed on Vercel).
+* **Backend:** Python FastAPI for high-performance API routing (Deployed on Render).
+* **AI/LLM Engine:** Groq API (LLaMA 3.1 8B Instant) for ultra-fast NLP data extraction.
+* **Database:** Supabase (PostgreSQL) for storing and querying government scheme criteria.
+* **Audio Processing:** Browser MediaRecorder API integrated with backend transcription.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Key Features
+1. **Natural Language Processing:** Converts conversational Hindi/English into structured JSON (Age, Income, Occupation, State).
+2. **Smart Match Algorithm:** Accurately filters database rows based on dynamic AI-extracted parameters.
+3. **Voice Integration:** Allows users to speak their problems instead of typing.
+4. **Cloud Native:** Fully deployed and decoupled frontend-backend architecture.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+*Built as a solo project for the NxtWave CCBP 4.0 Hackathon Qualifier.*

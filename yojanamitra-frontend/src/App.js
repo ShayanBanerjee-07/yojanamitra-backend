@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import './App.css'; 
+import './App.css';
 
 function App() {
   const [inputText, setInputText] = useState('');
@@ -8,11 +8,9 @@ function App() {
   const [results, setResults] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   
-  // Reference for MediaRecorder and audio chunks
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
-  // NEW VOICE RECORDING LOGIC
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -49,10 +47,9 @@ function App() {
     formData.append("file", audioBlob, "voice_input.webm");
 
     try {
-      const response = await axios.post('http://localhost:8000/api/transcribe', formData, {
+      const response = await axios.post('https://yojanamitra-backend-xvwl.onrender.com/api/transcribe', formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
-      // Directly enter the text received from the backend into the textbox
       setInputText(response.data.transcribed_text);
     } catch (error) {
       console.error("Transcription error:", error);
@@ -60,14 +57,13 @@ function App() {
     }
     setLoading(false);
   };
-  // ------------------------------------
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!inputText) return;
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/api/search-schemes', {
+      const response = await axios.post('https://yojanamitra-backend-xvwl.onrender.com/api/search-schemes', {
         text: inputText
       });
       setResults(response.data);
@@ -79,53 +75,58 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial', maxWidth: '600px', margin: '0 auto' }}>
-      <h1 style={{ color: '#1a365d', textAlign: 'center' }}>YojanaMitra AI 🇮🇳</h1>
-      <p style={{ textAlign: 'center', color: '#555' }}>Apni problem likhein ya mic daba kar baat bolein.</p>
+    <div className="app-container">
+      <h1 className="header-title">Yojana<span>Mitra</span> AI 🇮🇳</h1>
+      <p className="header-subtitle">Apni pareshani ya profile natural language mein likhein ya bolein.</p>
       
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <form onSubmit={handleSubmit}>
         <textarea
+          className="input-box"
           rows="4"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder="Example: Main Bhilai se hu, meri umar 20 saal hai, main ek student hu..."
-          style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          placeholder="Example: Main Bhilai se hu, meri umar 20 saal hai, main ek student hu aur mere ghar ki aay 1.5 lakh hai."
         />
         
-        {/* New Buttons Layout */}
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="button-group">
           <button 
             type="button" 
             onMouseDown={startRecording} 
             onMouseUp={stopRecording}
             onTouchStart={startRecording} 
             onTouchEnd={stopRecording}
-            style={{ flex: 1, padding: '10px', backgroundColor: isRecording ? '#e53e3e' : '#4a5568', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            className={`btn-voice ${isRecording ? 'recording' : ''}`}
           >
-            {isRecording ? '🔴 Sun raha hu... (Chhodne par stop hoga)' : '🎤 Hold to Speak'}
+            {isRecording ? '🔴 Sun raha hu...' : '🎤 Hold to Speak'}
           </button>
           
-          <button type="submit" disabled={loading} style={{ flex: 1, padding: '10px', backgroundColor: '#2b6cb0', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-            {loading ? 'Processing...' : 'Sahi Yojana Dhundo'}
+          <button type="submit" disabled={loading} className="btn-primary">
+            {loading ? 'AI Processing...' : 'Sahi Yojana Dhundo'}
           </button>
         </div>
       </form>
 
       {results && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>AI Extracted Profile:</h3>
-          <p style={{ backgroundColor: '#edf2f7', padding: '10px', borderRadius: '5px' }}>
+        <div>
+          <div className="profile-card">
+            <strong>AI Extracted Profile:</strong><br/>
             Age: {results.extracted_profile.age} | Occupation: {results.extracted_profile.occupation} | Income: ₹{results.extracted_profile.annual_income}
-          </p>
+          </div>
 
-          <h3>Aapke Liye Relevant Schemes:</h3>
-          {results.matched_schemes.length === 0 ? <p>Koi scheme nahi mili.</p> : (
+          <h3 style={{color: '#2d3748', marginTop: '30px'}}>Aapke Liye Relevant Schemes:</h3>
+          {results.matched_schemes.length === 0 ? (
+            <p style={{color: '#718096'}}>Koi scheme nahi mili. Kripya apni details badal kar try karein.</p>
+          ) : (
             results.matched_schemes.map((scheme) => (
-              <div key={scheme.id} style={{ border: '1px solid #e2e8f0', padding: '15px', borderRadius: '5px', marginBottom: '10px', backgroundColor: '#fff' }}>
-                <h4>{scheme.scheme_name}</h4>
-                <p>{scheme.description}</p>
-                <p><strong>Zaroori Documents:</strong> {scheme.required_documents.join(', ')}</p>
-                <a href={scheme.official_link} target="_blank" rel="noreferrer" style={{ color: '#3182ce' }}>Official Link pe jayein</a>
+              <div key={scheme.id} className="scheme-card">
+                <h4 className="scheme-title">{scheme.scheme_name}</h4>
+                <p className="scheme-desc">{scheme.description}</p>
+                <div className="scheme-docs">
+                  <strong>Zaroori Documents:</strong> {scheme.required_documents.join(', ')}
+                </div>
+                <a href={scheme.official_link} target="_blank" rel="noreferrer" className="apply-link">
+                  Official Website Par Jayein →
+                </a>
               </div>
             ))
           )}
